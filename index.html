@@ -552,28 +552,17 @@
             const correctGrade = question.grade;
             const isCorrect = selectedGrade === correctGrade;
 
-            let explanation = question.explanation;
-
-            // Generate generic explanation for real photo mode if none is specific
-            if (!explanation) {
-                const characteristics = {
-                    1: 'apresenta múltiplas camadas de células do cumulus (≥ 3) e citoplasma homogêneo.',
-                    2: 'possui poucas camadas de células do cumulus (1-2) e citoplasma razoavelmente homogêneo.',
-                    3: 'tem pouca ou nenhuma célula do cumulus e citoplasma irregular ou escuro.'
-                };
-                explanation = `Este oócito é <strong>Grau ${correctGrade}</strong> pois ${characteristics[correctGrade]}`;
-            }
+            // let explanation = question.explanation; // Original explanation, no longer used in feedback display
 
             if (isCorrect) {
                 score += 10;
                 feedbackResult.textContent = 'Correto!';
                 feedbackResult.className = 'correct';
-                feedbackExplanation.innerHTML = explanation;
+                feedbackExplanation.innerHTML = ''; // Clear explanation for correct answers
             } else {
                 feedbackResult.textContent = 'Incorreto!';
                 feedbackResult.className = 'incorrect';
-                const incorrectExplanation = `A resposta correta era <strong>Grau ${correctGrade}</strong>. ` + explanation.replace(/Este oócito é <strong>Grau \d<\/strong> pois /i, '');
-                feedbackExplanation.innerHTML = incorrectExplanation;
+                feedbackExplanation.innerHTML = `A resposta correta era <strong>Grau ${correctGrade}</strong>.`; // Show only the correct grade
             }
             
             scoreCounter.textContent = `Pontos: ${score}`;
