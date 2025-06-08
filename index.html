@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classificação de Oócitos Bovinos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* CSS - style.css */
+        :root {
+            --primary-color: #005a9c;
+            --secondary-color: #007bff;
+            --success-color: #28a745;
+            --success-hover-color: #218838;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --danger-color: #dc3545;
+            --danger-hover-color: #c82333;
+            --gray-color: #6c757d;
+            --background-color: #eef2f5;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--background-color);
+            color: var(--dark-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .screen {
+            padding: 2rem;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1, h2 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        h1 {
+           font-size: 1.8rem;
+        }
+        
+        h2 {
+           font-size: 1.5rem;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            text-align: justify;
+        }
+        
+        strong {
+            color: var(--primary-color);
+        }
+
+        .btn-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn.btn-simulated:hover {
+             background-color: var(--primary-color);
+        }
+        
+        .btn-secondary {
+            background-color: var(--gray-color);
+        }
+        
+        .btn-secondary:hover {
+            background-color: var(--dark-color);
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+        }
+        
+        .btn-success:hover {
+            background-color: var(--success-hover-color);
+        }
+        
+        .btn-danger {
+            background-color: var(--danger-color);
+        }
+
+        .btn-danger:hover {
+            background-color: var(--danger-hover-color);
+        }
+
+        .btn-tiny {
+            padding: 0.5rem 1rem;
+            font-size: 0.85rem;
+            font-weight: 400;
+            background-color: var(--gray-color);
+            width: auto;
+        }
+        
+        .btn-tiny:hover {
+            background-color: var(--dark-color);
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* Game Screen */
+        #game-screen .stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-weight: 600;
+        }
+        
+        #oocyte-image-container {
+            width: 100%;
+            height: 250px;
+            background-color: #000;
+            border-radius: var(--border-radius);
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        
+        #oocyte-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+        
+        #game-screen .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.8rem;
+        }
+
+
+        /* Feedback Modal */
+        #feedback-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+            z-index: 1000;
+            padding: 1rem;
+        }
+        
+        #feedback-modal.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        
+        .feedback-content {
+            background-color: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            text-align: center;
+            width: 100%;
+            max-width: 450px;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+        
+        #feedback-modal.visible .feedback-content {
+            transform: scale(1);
+        }
+
+        #feedback-result {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        #feedback-result.correct {
+            color: var(--success-color);
+        }
+        
+        #feedback-result.incorrect {
+            color: var(--danger-color);
+        }
+        
+        #feedback-explanation {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        /* Classification Screen */
+        .classification-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .grade-card {
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            background: var(--light-color);
+        }
+        
+        .grade-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 0.5rem;
+        }
+
+        /* End Screen */
+        #final-score {
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-align: center;
+        }
+        
+        #score-percentage {
+            font-size: 1.5rem;
+            color: var(--gray-color);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+
+        /* Responsividade */
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            h2 {
+                font-size: 1.8rem;
+            }
+            .container {
+                max-width: 800px;
+            }
+             .btn-container {
+                flex-direction: row;
+                justify-content: center;
+            }
+            #game-screen .options {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .classification-grid {
+                flex-direction: row;
+                gap: 1.5rem;
+            }
+            .grade-card {
+                flex: 1;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- Tela de Menu Inicial -->
+        <div id="menu-screen" class="screen active">
+            <h1>Classificação de Oócitos Bovinos</h1>
+            <p>Bem-vindo ao jogo educativo! Escolha um modo para começar a treinar suas habilidades de classificação de oócitos (Grau 1 a 3).</p>
+            
+            <div class="btn-container" style="margin-top: 1rem; margin-bottom: -1rem;">
+                <a href="https://repro-fiv.vercel.app/#/" class="btn btn-danger">Voltar ao site</a>
+            </div>
+
+            <div class="btn-container">
+                <button id="start-svg-btn" class="btn btn-simulated">Iniciar com Simulação</button>
+                <button id="start-real-btn" class="btn btn-success">Iniciar com Fotos Reais</button>
+            </div>
+            <div class="btn-container">
+                 <button id="classification-btn" class="btn btn-secondary">Ver Guia de Classificação</button>
+            </div>
+        </div>
+        
+        <!-- Tela de Ver Classificação -->
+        <div id="classification-screen" class="screen">
+            <h2>Guia de Classificação</h2>
+            <div class="classification-grid">
+                <div class="grade-card">
+                    <h3>Grau 1</h3>
+                    <p>Considerado de alta qualidade. Apresenta múltiplas camadas de células do cumulus (≥ 3) e um citoplasma de aparência uniforme e homogênea.</p>
+                </div>
+                <div class="grade-card">
+                    <h3>Grau 2</h3>
+                    <p>Qualidade intermediária. Possui menos camadas de células do cumulus (1 a 2) e um citoplasma que ainda é considerado razoavelmente homogêneo.</p>
+                </div>
+                <div class="grade-card">
+                    <h3>Grau 3</h3>
+                    <p>Baixa qualidade. Caracterizado pela ausência ou poucas células do cumulus e um citoplasma irregular, escuro ou com anomalias visíveis.</p>
+                </div>
+            </div>
+            <div class="btn-container">
+                <button class="btn back-to-menu">Voltar ao Menu</button>
+            </div>
+        </div>
+
+
+        <!-- Tela do Jogo -->
+        <div id="game-screen" class="screen">
+            <div class="stats">
+                <span id="question-counter"></span>
+                <span id="score-counter">Pontos: 0</span>
+                <button id="home-btn" class="btn btn-tiny">Início</button>
+            </div>
+            <div id="oocyte-image-container">
+                <img id="oocyte-image" src="" alt="Imagem de um oócito bovino para classificação" onerror="this.src='https://placehold.co/400x400/000000/FFFFFF?text=Imagem+n%C3%A3o+encontrada'; this.alt='Erro ao carregar imagem.'">
+            </div>
+            <p style="text-align: center; font-weight: 600;">Qual o grau deste oócito?</p>
+            <div class="options">
+                <button class="btn answer-btn" data-grade="1">Grau 1</button>
+                <button class="btn answer-btn" data-grade="2">Grau 2</button>
+                <button class="btn answer-btn" data-grade="3">Grau 3</button>
+            </div>
+        </div>
+
+        <!-- Tela Final -->
+        <div id="end-screen" class="screen">
+            <h2>Fim de Jogo!</h2>
+            <p>Sua pontuação final foi:</p>
+            <div id="final-score">0</div>
+            <div id="score-percentage">(0%)</div>
+            <p>Continue praticando para aprimorar suas habilidades de classificação!</p>
+            <div class="btn-container">
+                <button id="restart-btn" class="btn">Recomeçar</button>
+                <button class="btn btn-secondary back-to-menu">Voltar ao Início</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal de Feedback -->
+    <div id="feedback-modal">
+        <div class="feedback-content">
+            <h3 id="feedback-result"></h3>
+            <p id="feedback-explanation"></p>
+            <button id="next-question-btn" class="btn">Próxima Pergunta</button>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- BANCO DE DADOS DE OÓCITOS (SIMULAÇÃO) ---
+        const svgOocytes = [
+            { id: 'g1_1', grade: 1, explanation: 'Este oócito é Grau 1, pois possui múltiplas camadas de células do cumulus bem compactas e um citoplasma totalmente homogêneo.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f1" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="0.5" /></filter></defs><circle cx="50" cy="50" r="45" fill="#a0d2fa" opacity="0.3"/><circle cx="50" cy="50" r="38" fill="#a0d2fa" opacity="0.4"/><circle cx="50" cy="50" r="31" fill="#a0d2fa" opacity="0.5"/><circle cx="50" cy="50" r="25" fill="#007bff" opacity="0.8"/><circle cx="50" cy="50" r="25" fill="#f0f8ff" opacity="0.2" filter="url(#f1)"/></svg>` },
+            { id: 'g1_2', grade: 1, explanation: 'Classificado como Grau 1 devido às abundantes camadas de células do cumulus e ao citoplasma com granulação fina e uniforme.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(15 50 50)"><circle cx="50" cy="50" r="46" fill="#bde0fe" opacity="0.3"/><circle cx="50" cy="50" r="40" fill="#bde0fe" opacity="0.4"/><circle cx="50" cy="50" r="34" fill="#bde0fe" opacity="0.5"/><circle cx="50" cy="50" r="28" fill="#007bff"/><circle cx="50" cy="50" r="28" fill="url(#g1)"/></g><defs><radialGradient id="g1"><stop offset="60%" stop-color="#add8e6" stop-opacity="0.1"/><stop offset="100%" stop-color="#87ceeb" stop-opacity="0.3"/></radialGradient></defs></svg>` },
+            { id: 'g1_3', grade: 1, explanation: 'Grau 1. Note a coroa radiata bem definida, as várias camadas de células e o citoplasma sem imperfeições visíveis.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#a0d2fa" opacity="0.2"/><circle cx="50" cy="50" r="42" fill="#a0d2fa" opacity="0.3"/><circle cx="50" cy="50" r="36" fill="#a0d2fa" opacity="0.4"/><circle cx="50" cy="50" r="30" fill="#a0d2fa" opacity="0.5"/><circle cx="50" cy="50" r="24" fill="#006dcc" /></svg>` },
+            { id: 'g2_1', grade: 2, explanation: 'Este é um Grau 2. Possui apenas 1 a 2 camadas de células do cumulus e o citoplasma, embora bom, não é perfeitamente homogêneo.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f2" x="0" y="0"><feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" result="turbulence"/><feDisplacementMap in2="turbulence" in="SourceGraphic" scale="1" xChannelSelector="R" yChannelSelector="G"/></filter></defs><circle cx="50" cy="50" r="35" fill="#a0d2fa" opacity="0.6"/><circle cx="50" cy="50" r="28" fill="#a0d2fa" opacity="0.7"/><circle cx="50" cy="50" r="21" fill="#4fa8ff"/><circle cx="50" cy="50" r="21" fill="black" opacity="0.05" filter="url(#f2)"/></svg>` },
+            { id: 'g2_2', grade: 2, explanation: 'Grau 2. A quantidade de células do cumulus é reduzida e o citoplasma mostra uma leve irregularidade na granulação.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="32" fill="#bde0fe" opacity="0.7"/><circle cx="50" cy="50" r="24" fill="#3b9eff"/><defs><radialGradient id="g2"><stop offset="80%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.1)"/></radialGradient></defs><circle cx="50" cy="50" r="24" fill="url(#g2)"/></svg>` },
+            { id: 'g2_3', grade: 2, explanation: 'É um Grau 2. As camadas de células são incompletas, não rodeando todo o oócito, uma característica típica deste grau.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="clip1"><rect x="0" y="0" width="100" height="60" /></clipPath></defs><g clip-path="url(#clip1)"><circle cx="50" cy="50" r="38" fill="#a0d2fa" opacity="0.5"/><circle cx="50" cy="50" r="30" fill="#a0d2fa" opacity="0.6"/></g><circle cx="50" cy="50" r="22" fill="#4fa8ff"/></svg>` },
+            { id: 'g3_1', grade: 3, explanation: 'É um Grau 3. Este oócito está praticamente "nu", sem camadas de células do cumulus, e seu citoplasma é visivelmente irregular e escuro.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f3"><feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="3" result="turbulence"/><feDisplacementMap in2="turbulence" in="SourceGraphic" scale="2" xChannelSelector="R" yChannelSelector="G"/></filter></defs><circle cx="50" cy="50" r="20" fill="#6c757d" filter="url(#f3)"/><circle cx="50" cy="50" r="15" fill="#343a40" opacity="0.5"/></svg>` },
+            { id: 'g3_2', grade: 3, explanation: 'Classificado como Grau 3. Apresenta um citoplasma retraído e de coloração escura, indicando baixa viabilidade.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="18" fill="#5a6268"/><path d="M 50,35 A 15,12 0,0,0 50,65 A 15,18 0,0,0 50,35" fill="#343a40" opacity="0.7"/><circle cx="35" cy="35" r="5" fill="#a0d2fa" opacity="0.3"/><circle cx="68" cy="65" r="3" fill="#a0d2fa" opacity="0.2"/></svg>` },
+            { id: 'g3_3', grade: 3, explanation: 'Este é um exemplo clássico de Grau 3, com o citoplasma fragmentado e ausência total de células do cumulus de suporte.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f4"><feTurbulence type="fractalNoise" baseFrequency="0.5" numOctaves="4"/></filter></defs><circle cx="50" cy="50" r="22" fill="#868e96"/><circle cx="50" cy="50" r="22" fill="black" opacity="0.3" filter="url(#f4)"/></svg>` }
+        ];
+
+        // --- BANCO DE DADOS DE OÓCITOS (FOTOS REAIS - ESTRUTURA SIMPLIFICADA) ---
+        // INSTRUÇÃO:
+        // 1. Crie uma pasta "imagens" ao lado deste arquivo.
+        // 2. Coloque 10 fotos para cada grau (G1, G2, G3) na pasta.
+        // 3. Substitua os nomes "g1_1.jpg", "g1_2.jpg", etc., pelos nomes exatos dos seus arquivos.
+        const realOocytes = [
+            // 10 Oócitos Grau 1
+            { grade: 1, src: 'imagens/g1_1.jpg' }, { grade: 1, src: 'imagens/g1_2.jpg' },
+            { grade: 1, src: 'imagens/g1_3.jpg' }, { grade: 1, src: 'imagens/g1_4.jpg' },
+            { grade: 1, src: 'imagens/g1_5.jpg' }, { grade: 1, src: 'imagens/g1_6.jpg' },
+            { grade: 1, src: 'imagens/g1_7.jpg' }, { grade: 1, src: 'imagens/g1_8.jpg' },
+            { grade: 1, src: 'imagens/g1_9.jpg' }, { grade: 1, src: 'imagens/g1_10.jpg' },
+            // 10 Oócitos Grau 2
+            { grade: 2, src: 'imagens/g2_1.jpg' }, { grade: 2, src: 'imagens/g2_2.jpg' },
+            { grade: 2, src: 'imagens/g2_3.jpg' }, { grade: 2, src: 'imagens/g2_4.jpg' },
+            { grade: 2, src: 'imagens/g2_5.jpg' }, { grade: 2, src: 'imagens/g2_6.jpg' },
+            { grade: 2, src: 'imagens/g2_7.jpg' }, { grade: 2, src: 'imagens/g2_8.jpg' },
+            { grade: 2, src: 'imagens/g2_9.jpg' }, { grade: 2, src: 'imagens/g2_10.jpg' },
+            // 10 Oócitos Grau 3
+            { grade: 3, src: 'imagens/g3_1.jpg' }, { grade: 3, src: 'imagens/g3_2.jpg' },
+            { grade: 3, src: 'imagens/g3_3.jpg' }, { grade: 3, src: 'imagens/g3_4.jpg' },
+            { grade: 3, src: 'imagens/g3_5.jpg' }, { grade: 3, src: 'imagens/g3_6.jpg' },
+            { grade: 3, src: 'imagens/g3_7.jpg' }, { grade: 3, src: 'imagens/g3_8.jpg' },
+            { grade: 3, src: 'imagens/g3_9.jpg' }, { grade: 3, src: 'imagens/g3_10.jpg' }
+        ];
+
+        // --- VARIÁVEIS DE ESTADO DO JOGO ---
+        let currentQuestions = [];
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let lastGameMode = 'svg';
+        let TOTAL_QUESTIONS = 50; 
+
+        // --- REFERÊNCIAS AOS ELEMENTOS DO DOM ---
+        const screens = document.querySelectorAll('.screen');
+        const startSvgBtn = document.getElementById('start-svg-btn');
+        const startRealBtn = document.getElementById('start-real-btn');
+        const classificationBtn = document.getElementById('classification-btn');
+        const backToMenuBtns = document.querySelectorAll('.back-to-menu');
+        const restartBtn = document.getElementById('restart-btn');
+        const homeBtn = document.getElementById('home-btn');
+        const answerBtns = document.querySelectorAll('.answer-btn');
+        const questionCounter = document.getElementById('question-counter');
+        const scoreCounter = document.getElementById('score-counter');
+        const oocyteImage = document.getElementById('oocyte-image');
+        const finalScore = document.getElementById('final-score');
+        const scorePercentage = document.getElementById('score-percentage');
+        const feedbackModal = document.getElementById('feedback-modal');
+        const feedbackResult = document.getElementById('feedback-result');
+        const feedbackExplanation = document.getElementById('feedback-explanation');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+
+        // --- FUNÇÕES DE NAVEGAÇÃO ---
+        function showScreen(screenId) {
+            screens.forEach(screen => screen.classList.remove('active'));
+            document.getElementById(screenId).classList.add('active');
+        }
+
+        // --- FUNÇÕES DO JOGO ---
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+        
+        function startGame(gameMode) {
+            lastGameMode = gameMode;
+            score = 0;
+            currentQuestionIndex = 0;
+            currentQuestions = [];
+
+            if (gameMode === 'real') {
+                TOTAL_QUESTIONS = 30;
+                const grade1 = shuffle(realOocytes.filter(o => o.grade === 1));
+                const grade2 = shuffle(realOocytes.filter(o => o.grade === 2));
+                const grade3 = shuffle(realOocytes.filter(o => o.grade === 3));
+                currentQuestions = [...grade1, ...grade2, ...grade3];
+            } else {
+                TOTAL_QUESTIONS = 50;
+                const shuffledData = shuffle([...svgOocytes]);
+                for (let i = 0; i < TOTAL_QUESTIONS; i++) {
+                    currentQuestions.push(shuffledData[i % shuffledData.length]);
+                }
+            }
+            
+            currentQuestions = shuffle(currentQuestions);
+            showQuestion();
+            showScreen('game-screen');
+        }
+
+        function showQuestion() {
+            if (currentQuestionIndex >= TOTAL_QUESTIONS) {
+                endGame();
+                return;
+            }
+
+            const question = currentQuestions[currentQuestionIndex];
+            
+            if (question.svg) {
+                 const svgDataUrl = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(question.svg);
+                 oocyteImage.src = svgDataUrl;
+            } else if (question.src) {
+                oocyteImage.src = question.src;
+            }
+            
+            questionCounter.textContent = `Pergunta ${currentQuestionIndex + 1}/${TOTAL_QUESTIONS}`;
+            scoreCounter.textContent = `Pontos: ${score}`;
+        }
+        
+        function handleAnswer(e) {
+            const selectedGrade = parseInt(e.target.dataset.grade);
+            const question = currentQuestions[currentQuestionIndex];
+            const correctGrade = question.grade;
+            const isCorrect = selectedGrade === correctGrade;
+
+            let explanation = question.explanation;
+
+            // Gera explicação genérica para o modo de fotos reais
+            if (!explanation) {
+                const characteristics = {
+                    1: 'apresenta múltiplas camadas de células do cumulus (≥ 3) e citoplasma homogêneo.',
+                    2: 'possui poucas camadas de células do cumulus (1-2) e citoplasma razoavelmente homogêneo.',
+                    3: 'tem pouca ou nenhuma célula do cumulus e citoplasma irregular ou escuro.'
+                };
+                explanation = `Este oócito é <strong>Grau ${correctGrade}</strong> pois ${characteristics[correctGrade]}`;
+            }
+
+            if (isCorrect) {
+                score += 10;
+                feedbackResult.textContent = 'Correto!';
+                feedbackResult.className = 'correct';
+                feedbackExplanation.innerHTML = explanation;
+            } else {
+                feedbackResult.textContent = 'Incorreto!';
+                feedbackResult.className = 'incorrect';
+                const incorrectExplanation = `A resposta correta era <strong>Grau ${correctGrade}</strong>. ` + explanation;
+                feedbackExplanation.innerHTML = incorrectExplanation;
+            }
+            
+            scoreCounter.textContent = `Pontos: ${score}`;
+
+            if (currentQuestionIndex === TOTAL_QUESTIONS - 1) {
+                nextQuestionBtn.textContent = 'Ver Resultado Final';
+            } else {
+                nextQuestionBtn.textContent = 'Próxima Pergunta';
+            }
+
+            feedbackModal.classList.add('visible');
+        }
+        
+        function nextQuestion() {
+            currentQuestionIndex++;
+            feedbackModal.classList.remove('visible');
+            showQuestion();
+        }
+
+        function endGame() {
+            finalScore.textContent = score;
+            const percentage = ((score / (TOTAL_QUESTIONS * 10)) * 100).toFixed(0);
+            scorePercentage.textContent = `Você acertou ${percentage}% das questões.`;
+            showScreen('end-screen');
+        }
+
+        // --- EVENT LISTENERS ---
+        startSvgBtn.addEventListener('click', () => startGame('svg'));
+        startRealBtn.addEventListener('click', () => startGame('real'));
+        restartBtn.addEventListener('click', () => startGame(lastGameMode));
+        homeBtn.addEventListener('click', () => showScreen('menu-screen'));
+        classificationBtn.addEventListener('click', () => showScreen('classification-screen'));
+        backToMenuBtns.forEach(btn => {
+            btn.addEventListener('click', () => showScreen('menu-screen'));
+        });
+        answerBtns.forEach(btn => {
+            btn.addEventListener('click', handleAnswer);
+        });
+        nextQuestionBtn.addEventListener('click', nextQuestion);
+    });
+    </script>
+</body>
+</html>
