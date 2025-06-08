@@ -180,6 +180,8 @@
             align-items: center;
             box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
             overflow: hidden;
+            color: white;
+            text-align: center;
         }
         
         #oocyte-image-container img {
@@ -370,7 +372,7 @@
                 <button id="home-btn" class="btn btn-tiny">Início</button>
             </div>
             <div id="oocyte-image-container">
-                <img id="oocyte-image" src="" alt="Imagem de um oócito bovino para classificação" onerror="this.src='https://placehold.co/400x400/000000/FFFFFF?text=Imagem+n%C3%A3o+encontrada'; this.alt='Erro ao carregar imagem.'">
+                <!-- A imagem do oócito será inserida aqui via JavaScript -->
             </div>
             <p style="text-align: center; font-weight: 600;">Qual o grau deste oócito?</p>
             <div class="options">
@@ -410,7 +412,7 @@
             { id: 'g1_1', grade: 1, explanation: 'Este oócito é Grau 1, pois possui múltiplas camadas de células do cumulus bem compactas e um citoplasma totalmente homogêneo.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f1" x="0" y="0"><feGaussianBlur in="SourceGraphic" stdDeviation="0.5" /></filter></defs><circle cx="50" cy="50" r="45" fill="#a0d2fa" opacity="0.3"/><circle cx="50" cy="50" r="38" fill="#a0d2fa" opacity="0.4"/><circle cx="50" cy="50" r="31" fill="#a0d2fa" opacity="0.5"/><circle cx="50" cy="50" r="25" fill="#007bff" opacity="0.8"/><circle cx="50" cy="50" r="25" fill="#f0f8ff" opacity="0.2" filter="url(#f1)"/></svg>` },
             { id: 'g1_2', grade: 1, explanation: 'Classificado como Grau 1 devido às abundantes camadas de células do cumulus e ao citoplasma com granulação fina e uniforme.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><g transform="rotate(15 50 50)"><circle cx="50" cy="50" r="46" fill="#bde0fe" opacity="0.3"/><circle cx="50" cy="50" r="40" fill="#bde0fe" opacity="0.4"/><circle cx="50" cy="50" r="34" fill="#bde0fe" opacity="0.5"/><circle cx="50" cy="50" r="28" fill="#007bff"/><circle cx="50" cy="50" r="28" fill="url(#g1)"/></g><defs><radialGradient id="g1"><stop offset="60%" stop-color="#add8e6" stop-opacity="0.1"/><stop offset="100%" stop-color="#87ceeb" stop-opacity="0.3"/></radialGradient></defs></svg>` },
             { id: 'g1_3', grade: 1, explanation: 'Grau 1. Note a coroa radiata bem definida, as várias camadas de células e o citoplasma sem imperfeições visíveis.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="48" fill="#a0d2fa" opacity="0.2"/><circle cx="50" cy="50" r="42" fill="#a0d2fa" opacity="0.3"/><circle cx="50" cy="50" r="36" fill="#a0d2fa" opacity="0.4"/><circle cx="50" cy="50" r="30" fill="#a0d2fa" opacity="0.5"/><circle cx="50" cy="50" r="24" fill="#006dcc" /></svg>` },
-            { id: 'g2_1', grade: 2, explanation: 'Este é um Grau 2. Possui apenas 1 a 2 camadas de células do cumulus e o citoplasma, embora bom, não é perfeitamente homogêneo.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f2" x="0" y="0"><feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" result="turbulence"/><feDisplacementMap in2="turbulence" in="SourceGraphic" scale="1" xChannelSelector="R" yChannelSelector="G"/></filter></defs><circle cx="50" cy="50" r="35" fill="#a0d2fa" opacity="0.6"/><circle cx="50" cy="50" r="28" fill="#a0d2fa" opacity="0.7"/><circle cx="50" cy="50" r="21" fill="#4fa8ff"/><circle cx="50" cy="50" r="21" fill="black" opacity="0.05" filter="url(#f2)"/></svg>` },
+            { id: 'g2_1', grade: 2, explanation: 'Este é um Grau 2. Possui apenas 1 a 2 camadas de células do cumulus e o citoplasma, embora bom, não é perfeitamente homogêneo.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f2" x="0" y="0"><feTurbulence type="fractalNoise" baseFrequency="0.1" numOctaves="2" result="turbulence"/><feDisplacementMap in2="turbulence" in="SourceGraphic" scale="1" xChannelSelector="R" yChannelSelector="G"/></filter></defs><circle cx="50"cy="50" r="35" fill="#a0d2fa" opacity="0.6"/><circle cx="50" cy="50" r="28" fill="#a0d2fa" opacity="0.7"/><circle cx="50" cy="50" r="21" fill="#4fa8ff"/><circle cx="50" cy="50" r="21" fill="black" opacity="0.05" filter="url(#f2)"/></svg>` },
             { id: 'g2_2', grade: 2, explanation: 'Grau 2. A quantidade de células do cumulus é reduzida e o citoplasma mostra uma leve irregularidade na granulação.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><circle cx="50" cy="50" r="32" fill="#bde0fe" opacity="0.7"/><circle cx="50" cy="50" r="24" fill="#3b9eff"/><defs><radialGradient id="g2"><stop offset="80%" stop-color="transparent"/><stop offset="100%" stop-color="rgba(0,0,0,0.1)"/></radialGradient></defs><circle cx="50" cy="50" r="24" fill="url(#g2)"/></svg>` },
             { id: 'g2_3', grade: 2, explanation: 'É um Grau 2. As camadas de células são incompletas, não rodeando todo o oócito, uma característica típica deste grau.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="clip1"><rect x="0" y="0" width="100" height="60" /></clipPath></defs><g clip-path="url(#clip1)"><circle cx="50" cy="50" r="38" fill="#a0d2fa" opacity="0.5"/><circle cx="50" cy="50" r="30" fill="#a0d2fa" opacity="0.6"/></g><circle cx="50" cy="50" r="22" fill="#4fa8ff"/></svg>` },
             { id: 'g3_1', grade: 3, explanation: 'É um Grau 3. Este oócito está praticamente "nu", sem camadas de células do cumulus, e seu citoplasma é visivelmente irregular e escuro.', svg: `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><filter id="f3"><feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="3" result="turbulence"/><feDisplacementMap in2="turbulence" in="SourceGraphic" scale="2" xChannelSelector="R" yChannelSelector="G"/></filter></defs><circle cx="50" cy="50" r="20" fill="#6c757d" filter="url(#f3)"/><circle cx="50" cy="50" r="15" fill="#343a40" opacity="0.5"/></svg>` },
@@ -420,28 +422,28 @@
 
         // --- BANCO DE DADOS DE OÓCITOS (FOTOS REAIS - ESTRUTURA SIMPLIFICADA) ---
         // INSTRUÇÃO:
-        // 1. Crie uma pasta "imagens" ao lado deste arquivo.
-        // 2. Coloque 10 fotos para cada grau (G1, G2, G3) na pasta.
-        // 3. Substitua os nomes "g1_1.jpg", "g1_2.jpg", etc., pelos nomes exatos dos seus arquivos.
+        // Cole a tag <img src="..."> completa dentro das aspas. As imagens devem estar na mesma pasta que este arquivo HTML.
+        // Exemplo: { grade: 1, html: '<img src="g1_1.jpg" alt="Oócito Grau 1">' }
+        // Exemplo com URL da web: { grade: 1, html: '<img src="https://link.com/oocito.png" alt="Oócito Grau 1">' }
         const realOocytes = [
             // 10 Oócitos Grau 1
-            { grade: 1, src: 'imagens/g1_1.jpg' }, { grade: 1, src: 'imagens/g1_2.jpg' },
-            { grade: 1, src: 'imagens/g1_3.jpg' }, { grade: 1, src: 'imagens/g1_4.jpg' },
-            { grade: 1, src: 'imagens/g1_5.jpg' }, { grade: 1, src: 'imagens/g1_6.jpg' },
-            { grade: 1, src: 'imagens/g1_7.jpg' }, { grade: 1, src: 'imagens/g1_8.jpg' },
-            { grade: 1, src: 'imagens/g1_9.jpg' }, { grade: 1, src: 'imagens/g1_10.jpg' },
+            { grade: 1, html: '<img src="grau1.1.png">' }, { grade: 1, html: '<img src="grau111111.png">' },
+            { grade: 1, html: '<img src="grau1.png">' }, { grade: 1, html: '<img src="grau1111111.png">' },
+            { grade: 1, html: '<img src="grau111.png">' }, { grade: 1, html: '<img src="grau11111111.png">' },
+            { grade: 1, html: '<img src="grau1111.png">' }, { grade: 1, html: '<img src="grau111111111.png">' },
+            { grade: 1, html: '<img src="grau11111.png">' }, { grade: 1, html: '<img src="grau1111111111.png">' },
             // 10 Oócitos Grau 2
-            { grade: 2, src: 'imagens/g2_1.jpg' }, { grade: 2, src: 'imagens/g2_2.jpg' },
-            { grade: 2, src: 'imagens/g2_3.jpg' }, { grade: 2, src: 'imagens/g2_4.jpg' },
-            { grade: 2, src: 'imagens/g2_5.jpg' }, { grade: 2, src: 'imagens/g2_6.jpg' },
-            { grade: 2, src: 'imagens/g2_7.jpg' }, { grade: 2, src: 'imagens/g2_8.jpg' },
-            { grade: 2, src: 'imagens/g2_9.jpg' }, { grade: 2, src: 'imagens/g2_10.jpg' },
+            { grade: 2, html: '<img src="gra22.png">' }, { grade: 2, html: '<img src="grau222222.png">' },
+            { grade: 2, html: '<img src="Grau2.2.png">' }, { grade: 2, html: '<img src="grau222222222.png">' },
+            { grade: 2, html: '<img src="grau222.png">' }, { grade: 2, html: '<img src="grau2222222222.png">' },
+            { grade: 2, html: '<img src="grau2222.png">' }, { grade: 2, html: '<img src="grau22222222222.png">' },
+            { grade: 2, html: '<img src="grau22222.png">' }, { grade: 2, html: '<img src="grau222222222222.png">' },
             // 10 Oócitos Grau 3
-            { grade: 3, src: 'imagens/g3_1.jpg' }, { grade: 3, src: 'imagens/g3_2.jpg' },
-            { grade: 3, src: 'imagens/g3_3.jpg' }, { grade: 3, src: 'imagens/g3_4.jpg' },
-            { grade: 3, src: 'imagens/g3_5.jpg' }, { grade: 3, src: 'imagens/g3_6.jpg' },
-            { grade: 3, src: 'imagens/g3_7.jpg' }, { grade: 3, src: 'imagens/g3_8.jpg' },
-            { grade: 3, src: 'imagens/g3_9.jpg' }, { grade: 3, src: 'imagens/g3_10.jpg' }
+            { grade: 3, html: '<img src="gra333.png">' }, { grade: 3, html: '<img src="grau3333.png">' },
+            { grade: 3, html: '<img src="grau3.3.png">' }, { grade: 3, html: '<img src="grau33333.png">' },
+            { grade: 3, html: '<img src="Grau3.png">' }, { grade: 3, html: '<img src="grau333333.png">' },
+            { grade: 3, html: '<img src="grau33.png">' }, { grade: 3, html: '<img src="grau3333333.png">' },
+            { grade: 3, html: '<img src="grau333.png">' }, { grade: 3, html: '<img src="grau33333333.png">' }
         ];
 
         // --- VARIÁVEIS DE ESTADO DO JOGO ---
@@ -462,7 +464,7 @@
         const answerBtns = document.querySelectorAll('.answer-btn');
         const questionCounter = document.getElementById('question-counter');
         const scoreCounter = document.getElementById('score-counter');
-        const oocyteImage = document.getElementById('oocyte-image');
+        const imageContainer = document.getElementById('oocyte-image-container');
         const finalScore = document.getElementById('final-score');
         const scorePercentage = document.getElementById('score-percentage');
         const feedbackModal = document.getElementById('feedback-modal');
@@ -517,12 +519,19 @@
             }
 
             const question = currentQuestions[currentQuestionIndex];
-            
+            imageContainer.innerHTML = ''; // Limpa o container
+
             if (question.svg) {
-                 const svgDataUrl = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(question.svg);
-                 oocyteImage.src = svgDataUrl;
-            } else if (question.src) {
-                oocyteImage.src = question.src;
+                const svgDataUrl = 'data:image/svg+xml;charset=UTF-8,' + encodeURIComponent(question.svg);
+                imageContainer.innerHTML = `<img src="${svgDataUrl}" alt="Oócito simulado">`;
+            } else if (question.html) {
+                imageContainer.innerHTML = question.html;
+                const newImg = imageContainer.querySelector('img');
+                if (newImg) {
+                    newImg.onerror = () => {
+                        imageContainer.innerHTML = `<span>Imagem não encontrada.<br>Verifique o nome do arquivo.</span>`;
+                    };
+                }
             }
             
             questionCounter.textContent = `Pergunta ${currentQuestionIndex + 1}/${TOTAL_QUESTIONS}`;
@@ -537,7 +546,7 @@
 
             let explanation = question.explanation;
 
-            // Gera explicação genérica para o modo de fotos reais
+            // Gera explicação genérica para o modo de fotos reais se não houver uma específica
             if (!explanation) {
                 const characteristics = {
                     1: 'apresenta múltiplas camadas de células do cumulus (≥ 3) e citoplasma homogêneo.',
@@ -555,7 +564,7 @@
             } else {
                 feedbackResult.textContent = 'Incorreto!';
                 feedbackResult.className = 'incorrect';
-                const incorrectExplanation = `A resposta correta era <strong>Grau ${correctGrade}</strong>. ` + explanation;
+                const incorrectExplanation = `A resposta correta era <strong>Grau ${correctGrade}</strong>. ` + explanation.replace(/Este oócito é <strong>Grau \d<\/strong> pois /i, '');
                 feedbackExplanation.innerHTML = incorrectExplanation;
             }
             
@@ -578,7 +587,8 @@
 
         function endGame() {
             finalScore.textContent = score;
-            const percentage = ((score / (TOTAL_QUESTIONS * 10)) * 100).toFixed(0);
+            const totalPossibleScore = TOTAL_QUESTIONS * 10;
+            const percentage = totalPossibleScore > 0 ? ((score / totalPossibleScore) * 100).toFixed(0) : 0;
             scorePercentage.textContent = `Você acertou ${percentage}% das questões.`;
             showScreen('end-screen');
         }
